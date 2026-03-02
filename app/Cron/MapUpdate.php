@@ -142,6 +142,58 @@ class MapUpdate extends AbstractCron {
     }
 
     /**
+     * delete expired super EOL connections
+     * >> php index.php "/cron/deleteEolSuperConnections"
+     * @param \Base $f3
+     * @throws \Exception
+     */
+    function deleteEolSuperConnections(\Base $f3){
+        $this->logStart(__FUNCTION__, false);
+        $eolSuperExpire = (int)$f3->get('PATHFINDER.CACHE.EXPIRE_CONNECTIONS_EOL_SUPER');
+
+        $total = 0;
+        $count = 0;
+        if($eolSuperExpire > 0){
+            if($pfDB = $f3->DB->getDB('PF')){
+                $sql = "SELECT
+                    `con`.`id`
+                FROM
+                  `connection` `con` INNER JOIN
+                  `map` ON
+                    `map`.`id` = `con`.`mapId`
+                WHERE
+                  `map`.`deleteEolSuperConnections` = :deleteEolSuperConnections AND
+                  TIMESTAMPDIFF(SECOND, `con`.`eolSuperUpdated`, NOW() ) > :expire_time
+            ";
+
+                $connectionsData = $pfDB->exec($sql, [
+                    'deleteEolSuperConnections' => 1,
+                    'expire_time' => $eolSuperExpire
+                ]);
+
+                if($connectionsData){
+                    $total = count($connectionsData);
+                    /**
+                     * @var $connection Pathfinder\ConnectionModel
+                     */
+                    $connection = Pathfinder\AbstractPathfinderModel::getNew('ConnectionModel');
+                    foreach($connectionsData as $data){
+                        $connection->getById( (int)$data['id'] );
+                        if($connection->valid()){
+                            $connection->erase();
+                            $count++;
+                        }
+                    }
+                }
+            }
+        }
+
+        $importCount = $total;
+
+        $this->logEnd(__FUNCTION__, $total, $count, $importCount);
+    }
+
+    /**
      * delete expired WH connections after max lifetime for wormholes is reached
      * >> php index.php "/cron/deleteExpiredConnections"
      * @param \Base $f3

@@ -37,6 +37,7 @@ define([
         // settings map form
         deleteExpiredConnectionsId: 'pf-map-dialog-delete-connections-expired',         // id for "deleteExpiredConnections" checkbox
         deleteEolConnectionsId: 'pf-map-dialog-delete-connections-eol',                 // id for "deleteEOLConnections" checkbox
+        deleteEolSuperConnectionsId: 'pf-map-dialog-delete-connections-eol-super',   // id for "deleteEOLSuperConnections" checkbox
         persistentAliasesId: 'pf-map-dialog-persistent-aliases',                        // id for "persistentAliases" checkbox
         persistentSignaturesId: 'pf-map-dialog-persistent-signatures',                  // id for "persistentSignatures" checkbox
         trackAbyssalJumpsId: 'pf-map-dialog-track-abyss-jumps',                         // id for "trackAbyssalJumps" checkbox
@@ -160,6 +161,7 @@ define([
                     // settings tab --------------
                     deleteExpiredConnectionsId : config.deleteExpiredConnectionsId,
                     deleteEolConnectionsId : config.deleteEolConnectionsId,
+                    deleteEolSuperConnectionsId : config.deleteEolSuperConnectionsId,
                     persistentAliasesId : config.persistentAliasesId,
                     persistentSignaturesId : config.persistentSignaturesId,
                     trackAbyssalJumpsId : config.trackAbyssalJumpsId,
@@ -168,6 +170,7 @@ define([
 
                     deleteExpiredConnections: true,
                     deleteEolConnections: true,
+                    deleteEolSuperConnections: true,
                     persistentAliases: true,
                     persistentSignatures: true,
                     trackAbyssalJumps: false,
@@ -232,6 +235,7 @@ define([
                     Object.assign(mapDialogData, {
                         deleteExpiredConnections: mapData.config.deleteExpiredConnections,
                         deleteEolConnections: mapData.config.deleteEolConnections,
+                        deleteEolSuperConnections: mapData.config.deleteEolSuperConnections,
                         persistentAliases: mapData.config.persistentAliases,
                         persistentSignatures: mapData.config.persistentSignatures,
                         trackAbyssalJumps: mapData.config.trackAbyssalJumps,

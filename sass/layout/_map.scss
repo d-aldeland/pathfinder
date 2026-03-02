@@ -736,7 +736,8 @@ $mapBubbleWidth:        30px;
   .pf-map-connection-wh-fresh,
   .pf-map-connection-wh-reduced,
   .pf-map-connection-wh-critical,
-  .pf-map-connection-wh-eol{
+  .pf-map-connection-wh-eol,
+  .pf-map-connection-wh-eol-super{
     z-index: 70;
   }
 
@@ -744,6 +745,18 @@ $mapBubbleWidth:        30px;
 
     path:first-child{
       stroke: $pink-dark;
+    }
+  }
+
+  // super EOL: must be AFTER .pf-map-connection-wh-eol for CSS specificity
+  .pf-map-connection-wh-eol-super {
+
+    path:first-child{
+      stroke: $red;
+      animation-name: pfPulseEol;
+      animation-duration: 1.5s;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
     }
   }
 

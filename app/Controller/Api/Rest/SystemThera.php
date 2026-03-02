@@ -92,6 +92,9 @@ class SystemThera extends AbstractRestController {
             if($wormholeData['estimatedEol'] <= 4){
                 $type[] = 'wh_eol';
             }
+            if($wormholeData['estimatedEol'] <= 1){
+                $type[] = 'wh_eol_super';
+            }
             switch($wormholeData['jumpMass']) {
                 case "capital":
                     $type[] = 'wh_jump_mass_xl';

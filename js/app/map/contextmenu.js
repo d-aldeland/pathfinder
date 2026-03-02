@@ -103,6 +103,7 @@ define([
             id: config.connectionContextMenuId,
             items: [
                 {icon: 'fa-hourglass-end', action: 'wh_eol', text: 'toggle EOL'},
+                {icon: 'fa-hourglass-end', action: 'wh_eol_super', text: 'toggle super EOL'},
                 {icon: 'fa-exclamation-triangle', action: 'preserve_mass', text: 'preserve mass'},
                 {icon: 'fa-reply fa-rotate-180', action: 'change_status', text: 'mass status', subitems: [
                         {subIcon: 'fa-circle', subIconClass: 'txt-color txt-color-gray', subAction: 'status_fresh', subText: 'stage 1 (fresh)'},

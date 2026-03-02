@@ -92,6 +92,12 @@ class MapModel extends AbstractMapTrackingModel {
             'default' => 1,
             'activity-log' => true
         ],
+        'deleteEolSuperConnections' => [
+            'type' => Schema::DT_BOOL,
+            'nullable' => false,
+            'default' => 1,
+            'activity-log' => true
+        ],
         'persistentAliases' => [
             'type' => Schema::DT_BOOL,
             'nullable' => false,
@@ -232,6 +238,7 @@ class MapModel extends AbstractMapTrackingModel {
             $mapData->icon                                  = $this->icon;
             $mapData->deleteExpiredConnections              = $this->deleteExpiredConnections;
             $mapData->deleteEolConnections                  = $this->deleteEolConnections;
+            $mapData->deleteEolSuperConnections             = $this->deleteEolSuperConnections;
             $mapData->persistentAliases                     = $this->persistentAliases;
             $mapData->persistentSignatures                  = $this->persistentSignatures;
             $mapData->trackAbyssalJumps                     = $this->trackAbyssalJumps;

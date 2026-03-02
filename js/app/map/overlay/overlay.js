@@ -508,6 +508,43 @@ define([
                     }
                 }
             }
+        },
+        connectionEolSuper: {
+            title: 'Super EOL',
+            trigger: 'hover',
+            class: 'pf-map-overlay-connection-eol-super',
+            iconClass: ['fas', 'fa-fw', 'fa-hourglass-end'],
+            hoverIntent: {
+                over: function(e){
+                    let map = getMapObjectFromOverlayIcon(this);
+                    let connections = MapUtil.searchConnectionsByScopeAndType(map, 'wh', ['wh_eol_super']);
+                    let serverDate = Util.getServerTime();
+
+                    for(let connection of connections){
+                        let eolSuperTimestamp = connection.getParameter('eolSuperUpdated');
+                        let eolSuperDate = Util.convertTimestampToServerTime(eolSuperTimestamp);
+                        let diff = Util.getTimeDiffParts(eolSuperDate, serverDate);
+
+                        connection.addOverlay([
+                            'Label',
+                            {
+                                label: '<i class="fas fa-fw fa-hourglass-end"></i>&nbsp;' + Util.formatTimeParts(diff),
+                                id: MapOverlayUtil.config.connectionOverlayEolSuperId,
+                                cssClass: [MapOverlayUtil.config.componentOverlayClass, 'eol'].join(' '),
+                                location: 0.25
+                            }
+                        ]);
+                    }
+                },
+                out: function(e){
+                    let map = getMapObjectFromOverlayIcon(this);
+                    let connections = MapUtil.searchConnectionsByScopeAndType(map, 'wh', ['wh_eol_super']);
+
+                    for(let connection of connections){
+                        connection.removeOverlay(MapOverlayUtil.config.connectionOverlayEolSuperId);
+                    }
+                }
+            }
         }
     };
 

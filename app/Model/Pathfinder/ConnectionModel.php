@@ -87,6 +87,10 @@ class ConnectionModel extends AbstractMapTrackingModel {
             'type' => Schema::DT_TIMESTAMP,
             'default' => null
         ],
+        'eolSuperUpdated' => [
+            'type' => Schema::DT_TIMESTAMP,
+            'default' => null
+        ],
         'signatures' => [
             'has-many' => ['Exodus4D\Pathfinder\Model\Pathfinder\SystemSignatureModel', 'connectionId']
         ],
@@ -115,6 +119,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
         'wh_jump_mass_xl',
         // other types
         'wh_eol',
+        'wh_eol_super',
         'preserve_mass'
     ];
 
@@ -134,6 +139,7 @@ class ConnectionModel extends AbstractMapTrackingModel {
         $connectionData->updated        = strtotime($this->updated);
         $connectionData->created        = strtotime($this->created);
         $connectionData->eolUpdated     = strtotime($this->eolUpdated);
+        $connectionData->eolSuperUpdated = strtotime($this->eolSuperUpdated);
 
         if( !empty($endpointsData = $this->getEndpointsData()) ){
             $connectionData->endpoints = $endpointsData;
@@ -167,12 +173,33 @@ class ConnectionModel extends AbstractMapTrackingModel {
         // set EOL timestamp
         if( !in_array('wh_eol', $type) ){
             $this->eolUpdated = null;
+            // removing EOL also removes super EOL
+            $type = array_values(array_diff($type, ['wh_eol_super']));
+            $this->eolSuperUpdated = null;
         }elseif(
             in_array('wh_eol', $type) &&
             !in_array('wh_eol', (array)$this->type) // $this->type == null for new connection! (e.g. map import)
         ){
             // connection EOL status change
             $this->touch('eolUpdated');
+        }
+
+        // set super EOL timestamp
+        if( !in_array('wh_eol_super', $type) ){
+            $this->eolSuperUpdated = null;
+        }elseif(
+            in_array('wh_eol_super', $type) &&
+            !in_array('wh_eol_super', (array)$this->type)
+        ){
+            // connection super EOL status change
+            $this->touch('eolSuperUpdated');
+            // super EOL implies regular EOL
+            if( !in_array('wh_eol', $type) ){
+                $type[] = 'wh_eol';
+                if( !in_array('wh_eol', (array)$this->type) ){
+                    $this->touch('eolUpdated');
+                }
+            }
         }
 
         return $type;

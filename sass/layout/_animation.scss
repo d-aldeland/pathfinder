@@ -110,6 +110,19 @@
   }
 }
 
+// SVG pulse "stroke-opacity" for super EOL connections =============================================
+@include keyframes(pfPulseEol){
+  0% {
+    stroke-opacity: 1;
+  }
+  50% {
+    stroke-opacity: 0.4;
+  }
+  100% {
+    stroke-opacity: 1;
+  }
+}
+
 // pulse-out ======================================================================================
 @mixin pf-pulse-keyframes($name, $color, $backgroundColor, $keepVisible: false){
   @include keyframes($name){

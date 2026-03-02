@@ -757,6 +757,19 @@ define([
             case 'wh_eol':          // set "end of life"
                 MapOverlayUtil.getMapOverlay(mapElement, 'timer').startMapUpdateCounter();
                 MapUtil.toggleConnectionType(connection, action);
+                // removing EOL also removes super EOL
+                if(action === 'wh_eol' && !connection.hasType('wh_eol')){
+                    MapUtil.removeConnectionTypes(connection, ['wh_eol_super']);
+                }
+                MapUtil.markAsChanged(connection);
+                break;
+            case 'wh_eol_super':    // set "super end of life"
+                MapOverlayUtil.getMapOverlay(mapElement, 'timer').startMapUpdateCounter();
+                MapUtil.toggleConnectionType(connection, action);
+                // adding super EOL also adds regular EOL
+                if(connection.hasType('wh_eol_super') && !connection.hasType('wh_eol')){
+                    MapUtil.addConnectionTypes(connection, ['wh_eol']);
+                }
                 MapUtil.markAsChanged(connection);
                 break;
             case 'status_fresh':
@@ -929,7 +942,8 @@ define([
                     connectionId:   connectionId,
                     updated:        connectionData.updated,
                     created:        connectionData.created,
-                    eolUpdated:     connectionData.eolUpdated
+                    eolUpdated:     connectionData.eolUpdated,
+                    eolSuperUpdated: connectionData.eolSuperUpdated
                 });
 
                 if(connection.scope !== map.Defaults.Scope){
@@ -1044,7 +1058,7 @@ define([
         }
 
         // check for unhandled connection type changes ----------------------------------------------------------------
-        let allToggleTypes = ['wh_eol', 'preserve_mass'];
+        let allToggleTypes = ['wh_eol', 'wh_eol_super', 'preserve_mass'];
         let newTypes = allToggleTypes.intersect(newConnectionData.type.diff(currentConnectionData.type));
         let oldTypes = allToggleTypes.intersect(currentConnectionData.type.diff(newConnectionData.type));
 
@@ -1080,6 +1094,7 @@ define([
         connection.setParameter('created', newConnectionData.created);
         connection.setParameter('updated', newConnectionData.updated);
         connection.setParameter('eolUpdated', newConnectionData.eolUpdated);
+        connection.setParameter('eolSuperUpdated', newConnectionData.eolSuperUpdated);
         connection.setParameter('changed', false);
 
         return connection;
@@ -1878,6 +1893,9 @@ define([
             // active menu actions
             if(connection.hasType('wh_eol') === true){
                 options.active.push('wh_eol');
+            }
+            if(connection.hasType('wh_eol_super') === true){
+                options.active.push('wh_eol_super');
             }
             if(connection.hasType('preserve_mass') === true){
                 options.active.push('preserve_mass');

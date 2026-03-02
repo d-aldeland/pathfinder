@@ -187,6 +187,9 @@ define([
                     if(type.includes('wh_eol')){
                         styleClass.push('pf-wh-eol');
                     }
+                    if(type.includes('wh_eol_super')){
+                        styleClass.push('pf-wh-eol-super');
+                    }
                     if(type.includes('wh_reduced')){
                         styleClass.push('pf-wh-reduced');
                     }
