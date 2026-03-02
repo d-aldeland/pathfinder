@@ -170,6 +170,22 @@ class ConnectionModel extends AbstractMapTrackingModel {
         // -> reset keys! otherwise JSON format results in object and not in array
         $type = array_values(array_intersect(array_unique((array)$type), self::$connectionTypeWhitelist));
 
+        // set super EOL timestamp (must be checked BEFORE regular EOL
+        // so that super EOL can auto-add wh_eol before the EOL block runs)
+        if( !in_array('wh_eol_super', $type) ){
+            $this->eolSuperUpdated = null;
+        }elseif(
+            in_array('wh_eol_super', $type) &&
+            !in_array('wh_eol_super', (array)$this->type)
+        ){
+            // connection super EOL status change
+            $this->touch('eolSuperUpdated');
+            // super EOL implies regular EOL
+            if( !in_array('wh_eol', $type) ){
+                $type[] = 'wh_eol';
+            }
+        }
+
         // set EOL timestamp
         if( !in_array('wh_eol', $type) ){
             $this->eolUpdated = null;
@@ -182,24 +198,6 @@ class ConnectionModel extends AbstractMapTrackingModel {
         ){
             // connection EOL status change
             $this->touch('eolUpdated');
-        }
-
-        // set super EOL timestamp
-        if( !in_array('wh_eol_super', $type) ){
-            $this->eolSuperUpdated = null;
-        }elseif(
-            in_array('wh_eol_super', $type) &&
-            !in_array('wh_eol_super', (array)$this->type)
-        ){
-            // connection super EOL status change
-            $this->touch('eolSuperUpdated');
-            // super EOL implies regular EOL
-            if( !in_array('wh_eol', $type) ){
-                $type[] = 'wh_eol';
-                if( !in_array('wh_eol', (array)$this->type) ){
-                    $this->touch('eolUpdated');
-                }
-            }
         }
 
         return $type;

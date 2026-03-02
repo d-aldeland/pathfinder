@@ -531,7 +531,7 @@ define([
                                 label: '<i class="fas fa-fw fa-hourglass-end"></i>&nbsp;' + Util.formatTimeParts(diff),
                                 id: MapOverlayUtil.config.connectionOverlayEolSuperId,
                                 cssClass: [MapOverlayUtil.config.componentOverlayClass, 'eol'].join(' '),
-                                location: 0.25
+                                location: 0.15
                             }
                         ]);
                     }
